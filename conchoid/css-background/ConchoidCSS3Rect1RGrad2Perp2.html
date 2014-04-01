@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Conchoid Rectangles</title>
+  <link href="CSS32Background13.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 160,
+        basePointY   = 160,
+        offsetX      = 0,
+        offsetY      = 0,
+        rectWidth    = 150,
+        rectHeight   = 100,
+        Constant1    = 120,
+        Constant2    = 80,
+        maxAngle     = 720;
+ 
+    var w = 600, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+   var svg = d3.select("body")
+       .append("svg:svg")
+       .attr("width", w + p * 2)
+       .attr("height", h + p * 2)
+       .append("svg:g")
+         .attr("transform", "translate(" + p + "," + p + ")");
+   
+    var gradient = svg.append("svg:defs")
+      .append("svg:radialGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%");
+    
+    gradient.append("svg:stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#f00")
+        .attr("stop-opacity", 0.5);
+    
+    gradient.append("svg:stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#0f0")
+        .attr("stop-opacity", 0.5);
+    
+    gradient.append("svg:stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#00f")
+        .attr("stop-opacity", 0.2);
+ 
+    var gradient2 = svg.append("svg:defs")
+      .append("svg:radialGradient")
+        .attr("id", "gradient2")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%");
+    
+    gradient2.append("svg:stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#f00")
+        .attr("stop-opacity", 0.5);
+    
+    gradient2.append("svg:stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#0f0")
+        .attr("stop-opacity", 0.5);
+    
+    gradient2.append("svg:stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#fff")
+        .attr("stop-opacity", 0.2);
+
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant1+Constant2/Math.cos(a*Math.PI/180)}
+    });
+
+  svg.selectAll("text")
+    .data(data)
+    .enter().append("svg:rect")
+    .attr("x",   function(d) { 
+                     offsetX = d.radius*Math.cos(d.angle*Math.PI/180);
+                     return basePointX+offsetX; })
+    .attr("y",   function(d) { 
+                     offsetY = d.radius*Math.sin(d.angle*Math.PI/180);
+                     return basePointY-offsetY; })
+    .attr("fill", function(d) { 
+                     if(d.angle % 2 == 0) {
+                       return "url(#gradient)"; 
+                     } else {
+                       return "url(#gradient2)"; 
+                     }
+                  })
+    .attr("width", function(d) { if(d.angle % 2 == 0) return rectWidth; 
+                                else                 return rectHeight; })
+    .attr("height",function(d) { if(d.angle % 2 == 0) return 3*rectHeight; 
+                                else                 return 2*rectWidth; });
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

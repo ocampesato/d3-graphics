@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Lemniscate Elliptic Arcs</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 300,
+        basePointY   = 300,
+        offsetX      = 0,
+        offsetY      = 0,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Radius       = 150,
+        petalCount   = 1,
+        maxAngle     = 360;
+ 
+    var w = 800, h = 500, p = 10,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              radius: Radius*Math.sqrt(Math.abs(Math.cos(2*a*Math.PI/180))),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+
+  vis.selectAll("text")
+    .data(data)
+        .enter().append("svg:path")
+        .style("fill", "red")
+        .attr("fill", function(d) { 
+           if(d.angle % 2 == 0) {
+             return "#ff0";
+           } else {
+             return "#f00";
+           }
+        })
+        .style("stroke-width", "2px")
+        .attr("stroke", "blue")
+        .attr("d", function(d) { 
+             offsetX = d.radius*d.x;
+             offsetY = d.radius*d.y;
+
+           if(d.angle % 2 == 0) {
+             return "m"+(basePointX+offsetX)+","+(basePointY+offsetY)+
+                    " v-150 a150,150 0 0,0 -150,150 z";
+           } else {
+             return "m"+(basePointX+offsetX/2)+","+(basePointY+offsetY/2)+
+                    " v-100 a100,100 0 0,0 -100,100 z";
+           }
+        });
+  </script>
+ </body>
+</html>
+ 

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Lituus Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 350,
+        basePointY   = 200,
+        offsetX      = 0,
+        offsetY      = 0,
+        A            = 200,
+        B            = 2,
+        C            = 100,
+        D            = 5,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Constant     = 200,
+        maxAngle     = 720;
+ 
+    var w = 600, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+   var svg = d3.select("body")
+       .append("svg:svg")
+       .attr("width", w + p * 2)
+       .attr("height", h + p * 2)
+       .append("svg:g")
+         .attr("transform", "translate(" + p + "," + p + ")");
+   
+    var gradient = svg.append("svg:defs")
+      .append("svg:radialGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%");
+    
+    gradient.append("svg:stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#f00")
+        .attr("stop-opacity", 0.5);
+    
+    gradient.append("svg:stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#0f0")
+        .attr("stop-opacity", 0.5);
+    
+    gradient.append("svg:stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#00f")
+        .attr("stop-opacity", 0.2);
+ 
+    var gradient2 = svg.append("svg:defs")
+      .append("svg:radialGradient")
+        .attr("id", "gradient2")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%");
+    
+    gradient2.append("svg:stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#f00")
+        .attr("stop-opacity", 0.5);
+    
+    gradient2.append("svg:stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#0f0")
+        .attr("stop-opacity", 0.5);
+    
+    gradient2.append("svg:stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#fff")
+        .attr("stop-opacity", 0.2);
+
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant*Constant/(a+1)}
+    });
+
+  svg.selectAll("text")
+    .data(data)
+    .enter().append("svg:ellipse")
+    .attr("fill", function(d) { 
+                     if(d.angle % 2 == 0) {
+                       return "url(#gradient)"; 
+                     } else {
+                       return "url(#gradient2)"; 
+                     }
+                  })
+    .attr("cx",   function(d) { 
+                       offsetX = d.radius*Math.cos(d.angle*Math.PI/180);
+                       return basePointX+offsetX; 
+    })
+    .attr("cy",   function(d) { 
+                       offsetY = d.radius*Math.sin(d.angle*Math.PI/180);
+                       return basePointY-offsetY; 
+    })
+    .attr("rx",   function(d) { if(d.angle % 2 == 0) return majorAxis; 
+                                else                 return minorAxis; })
+    .attr("ry",   function(d) { if(d.angle % 2 == 0) return 3*minorAxis; 
+                                else                 return 2*majorAxis; });
+  </script>
+ </body>
+</html>
+ 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cardioid Elliptic Arcs</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 200,
+        basePointY   = 250,
+        offsetX      = 0,
+        offsetY      = 0,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Radius       = 150,
+        petalCount   = 1,
+        maxAngle     = 360; 
+ 
+    var w = 800, h = 500, p = 10,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              r:      Radius*(1.0+Math.cos(petalCount*a*Math.PI/180)),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+
+  vis.selectAll("text")
+    .data(data)
+        .enter().append("svg:path")
+        .style("fill", "red")
+        .attr("fill", function(d) { 
+           if(d.angle % 2 == 0) {
+             return "#ff0";
+           } else {
+             return "#f00";
+           }
+        })
+        .style("stroke-width", "2px")
+        .attr("stroke", "blue")
+        .attr("d", function(d) { 
+           if(d.angle % 2 == 0) {
+             return "m"+(basePointX+d.r*d.x)+","+(basePointY+d.r*d.y)+
+                    " h-100 a100,100 0 1,0 100,-100 z";
+           } else {
+             return "m"+(basePointX+2*d.r*d.x)+","+(basePointY+2*d.r*d.y)+
+                    " v-100 a100,100 0 0,0 -100,100 z";
+           }
+        });
+  </script>
+ </body>
+</html>
+ 

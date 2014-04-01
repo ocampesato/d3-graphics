@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Conchoid Diamonds</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 250,
+        basePointY   = 150,
+        offsetX      = 0,
+        offsetY      = 0,
+        tWidth       = 100,
+        tHeight      = 80,
+        Constant1    = 120,
+        Constant2    = 80,
+        maxAngle     = 720;
+ 
+    var w = 600, h = 400, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant1+Constant2/Math.cos(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    vis.selectAll("text")
+      .data(data)
+      .enter().append("svg:polygon")
+      .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("points",function(d) { 
+                      offsetX = d.radius*Math.cos(d.angle*Math.PI/180);
+                      offsetY = d.radius*Math.sin(d.angle*Math.PI/180);
+
+                      var points = (basePointX+offsetX)+","+
+                                   (basePointY+offsetY)+" "+
+                                   (basePointX+offsetX+tWidth)+","+
+                                   (basePointY+offsetY+tHeight)+" "+
+                                   (basePointX+offsetX+0*tWidth)+","+
+                                   (basePointY+offsetY+2*tHeight)+" "+
+                                   (basePointX+offsetX-1*tWidth)+","+
+                                   (basePointY+offsetY+1*tHeight)+" "+
+                                   (basePointX+offsetX+0*tWidth)+" "+
+                                   (basePointY+offsetY+0*tHeight);
+                      return points;
+      });
+  </script>
+ </body>
+</html>
+ 

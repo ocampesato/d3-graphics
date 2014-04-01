@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Conchoid Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 120,
+        basePointY   = 250,
+        offsetX      = 0,
+        offsetY      = 0,
+        radius       = 0,
+        factor       = 1,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Constant1    = 120,
+        Constant2    = 80,
+        angle        = 0,
+        maxAngle     = 360;
+ 
+    var w = 600,
+        h = 500,
+        p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant1+Constant2/Math.cos(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:ellipse")
+    .attr("fill", function(d) { return eColors[d.angle % eColors.length]; })
+    .attr("cx",   function(d) { 
+                     offsetX = d.radius*Math.cos(d.angle*Math.PI/180);
+                     return basePointX+offsetX; })
+    .attr("cy",   function(d) { 
+                     offsetY = d.radius*Math.sin(d.angle*Math.PI/180);
+                     return basePointY-offsetY; })
+    .attr("rx",   function(d) { return majorAxis; })
+    .attr("ry",   function(d) { return minorAxis; })
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+ </body>
+</html>
+ 

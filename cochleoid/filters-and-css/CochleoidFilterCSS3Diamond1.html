@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cochleoid Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+  <link href="CSS32Background7.css" rel="stylesheet" type="text/css">
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 150,
+        basePointY   = 10,
+        offsetX      = 0,
+        offsetY      = 0,
+        tWidth       = 300,
+        tHeight      = 180,
+        Constant     = 20000,
+        maxAngle     = 100;
+ 
+    var w = 800, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant*Math.sin(a*Math.PI/180)/(a+1),
+              offsetX: Math.cos(a*Math.PI/180),
+              offsetY: Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+    vis.selectAll("text")
+      .data(data)
+      .enter().append("svg:polygon")
+      .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("points",function(d) { 
+                      var points = (basePointX+d.radius*d.offsetX)+","+
+                                   (basePointY+d.radius*d.offsetY)+" "+
+                                   (basePointX+d.radius*d.offsetX+tWidth)+","+
+                                   (basePointY+d.radius*d.offsetY+tHeight)+" "+
+                                   (basePointX+d.radius*d.offsetX+0*tWidth)+","+
+                                   (basePointY+d.radius*d.offsetY+2*tHeight)+" "+
+                                   (basePointX+d.radius*d.offsetX-1*tWidth)+","+
+                                   (basePointY+d.radius*d.offsetY+1*tHeight)+" "+
+                                   (basePointX+d.radius*d.offsetX+0*tWidth)+" "+
+                                   (basePointY+d.radius*d.offsetY+0*tHeight);
+                      return points;
+      })
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

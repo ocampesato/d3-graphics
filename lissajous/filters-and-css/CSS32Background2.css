@@ -1,0 +1,56 @@
+
+#myCanvas {
+opacity: 0.5;
+font-size: 24px;
+width:  800px;
+height: 500px;
+position: absolute; top: 0px; left: 0px;
+
+background: -webkit-gradient(
+  radial, 300 50%, 20, 100 25%, 40, from(red), 
+  color-stop(0.05, orange), color-stop(0.4, yellow), 
+  color-stop(0.6, green), color-stop(0.9, blue),
+  to(#fff)
+ );
+
+background-image: -webkit-gradient(linear, right top, left bottom, 
+                   from(yellow), 
+                   color-stop(25%, yellow), 
+                   color-stop(25%, red), 
+                   color-stop(50%, yellow),
+                   color-stop(50%, red), 
+                   color-stop(75%, yellow),
+                   color-stop(75%, red), 
+                   to(red));
+-webkit-background-size: 20px;
+}
+
+#myCanvas:hover {
+font-size: 24px;
+width:  800px;
+height: 500px;
+position: absolute; top: 0px; left: 0px;
+
+background-image: -webkit-gradient(linear, 0% 100%, 100% 0%, 
+                                   from(#f00), 
+                                   color-stop(0.2, orange), 
+                                   color-stop(0.4, yellow), 
+                                   color-stop(0.6, green), 
+                                   color-stop(0.8, blue),
+                                   to(#00f));
+
+background-image: -gradient(linear, 0% 100%, 100% 0%, 
+                            from(#f00), 
+                            color-stop(0.2, orange), 
+                            color-stop(0.4, yellow), 
+                            color-stop(0.6, green), 
+                            color-stop(0.8, blue),
+                            to(#fff));
+
+-webkit-border-radius: 124px;
+border-radius: 124px;
+-webkit-box-shadow:  30px 30px 30px #000;
+-webkit-box-reflect: above 1px;
+-box-reflect: above 1px;
+}
+

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Lemniscate Diamonds</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 320,
+        basePointY   = 100,
+        offsetX      = 0,
+        offsetY      = 0,
+        tWidth       = 100,
+        tHeight      = 80,
+        Radius       = 200, 
+        petalCount   = 1,
+        maxAngle     = 360;
+ 
+    var w = 600, h = 400, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              radius: Radius*Math.sqrt(Math.abs(Math.cos(2*a*Math.PI/180))),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    vis.selectAll("text")
+      .data(data)
+      .enter().append("svg:polygon")
+      .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("points",function(d) { 
+                      offsetX = d.radius*d.x;
+                      offsetY = d.radius*d.y;
+
+                      var points = (basePointX+offsetX)+","+
+                                   (basePointY+offsetY)+" "+
+                                   (basePointX+offsetX+tWidth)+","+
+                                   (basePointY+offsetY+tHeight)+" "+
+                                   (basePointX+offsetX+0*tWidth)+","+
+                                   (basePointY+offsetY+2*tHeight)+" "+
+                                   (basePointX+offsetX-1*tWidth)+","+
+                                   (basePointY+offsetY+1*tHeight)+" "+
+                                   (basePointX+offsetX+0*tWidth)+" "+
+                                   (basePointY+offsetY+0*tHeight);
+                      return points;
+      });
+  </script>
+ </body>
+</html>
+ 

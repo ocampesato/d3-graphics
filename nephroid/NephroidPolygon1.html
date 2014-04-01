@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Nephroid Diamonds</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 300,
+        basePointY   = 250,
+        offsetX      = 0,
+        offsetY      = 0,
+        sideLength   = 100,
+        vertexCount  = 8,
+        vertexAngle  = 360/vertexCount,
+        vertexXPts   = new Array(vertexCount),
+        vertexYPts   = new Array(vertexCount),
+        Radius       = 70,
+        petalCount   = 1,
+        maxAngle     = 360;
+ 
+    for(var v=0; v<vertexCount; v++) {
+      vertexXPts[v] = sideLength*Math.cos(v*vertexAngle*Math.PI/180);
+      vertexYPts[v] = sideLength*Math.sin(v*vertexAngle*Math.PI/180);
+    }
+
+    var w = 600, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              radius: Radius*(1.0+2*Math.sin(petalCount*a*Math.PI/180/2)),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    vis.selectAll("text")
+      .data(data)
+      .enter().append("svg:polygon")
+      .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("points",function(d) { 
+                      offsetX = d.radius*d.x;
+                      offsetY = d.radius*d.y;
+
+                      var points = "";
+                      for(var v=0; v<vertexCount; v++) {
+                        points += (basePointX+offsetX+vertexXPts[v])+","+
+                                  (basePointY+offsetY+vertexYPts[v])+" "; 
+                      }
+                      return points;
+      });
+  </script>
+ </body>
+</html>
+ 

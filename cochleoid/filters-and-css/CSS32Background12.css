@@ -1,0 +1,65 @@
+
+#myCanvas {
+opacity:0.6;
+font-size: 24px;
+width:  800px;
+height: 500px;
+position: absolute; top: 0px; left: 0px;
+
+background-image: -webkit-gradient(linear, right top, left bottom, 
+                                   from(yellow), 
+                                   color-stop(55%, yellow), 
+                                   color-stop(55%, blue), 
+                                   to(red));
+
+background-image: -gradient(linear, right top, left bottom, 
+                            from(yellow), 
+                            color-stop(55%, yellow), 
+                            color-stop(55%, blue), 
+                            to(red));
+
+-webkit-background-size: 20px;
+-webkit-border-radius: 124px;
+border-radius: 124px;
+-webkit-box-shadow:  30px 30px 30px #000;
+-webkit-box-reflect: below 1px;
+-box-reflect: below 1px;
+}
+
+#myCanvas:hover {
+font-size: 24px;
+opacity:0.6;
+width:  800px;
+height: 500px;
+position: absolute; top: 0px; left: 0px;
+
+background-image: -webkit-gradient(linear, right top, left bottom, 
+                                   from(yellow), 
+                                   color-stop(25%, yellow), 
+                                   color-stop(25%, red), 
+                                   color-stop(50%, red),
+                                   color-stop(50%, yellow), 
+                                   color-stop(75%, yellow),
+                                   color-stop(75%, red), 
+                                   to(red));
+
+background-image: -gradient(linear, right top, left bottom, 
+                            from(yellow), 
+                            color-stop(25%, yellow), 
+                            color-stop(25%, red), 
+                            color-stop(50%, red),
+                            color-stop(50%, yellow), 
+                            color-stop(75%, yellow),
+                            color-stop(75%, red), 
+                            to(red));
+
+-webkit-background-size: 10px;
+background-size: 10px;
+
+-webkit-border-radius: 124px;
+border-radius: 124px;
+-webkit-box-shadow:  30px 30px 30px #000;
+-webkit-box-reflect: above 1px;
+-box-reflect: above 1px;
+}
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cochleoid Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+  <link href="CSS32Background17.css" rel="stylesheet" type="text/css">
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 250,
+        basePointY   = 100,
+        offsetX      = 0,
+        offsetY      = 0,
+        minorAxis    = 80,
+        majorAxis    = 250,
+        Constant     = 20000,
+        maxAngle     = 200;
+ 
+    var eColors = ['#f00', '#00f'];
+
+    var w = 800, h = 500, p = 30,
+        eColors = ['#f00', '#ff0', '#0f0', '#800', 
+                   '#f0f', '#fff', '#000', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant*Math.sin(a*Math.PI/180)/(a+1),
+              offsetX: Math.cos(a*Math.PI/180),
+              offsetY: Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:path")
+      .attr("fill", function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("d", function(d)  { 
+      //return "M"+x(d.x)+","+y(d.y)+" C"+x(d.x)/2+","+y(d.y)/2+" "+
+      //       y(d.y)/3+","+x(d.x)/4+" 300,100"; }
+        return "M"+(basePointX+d.radius*d.offsetX)+","+(basePointY+d.radius*d.offsetY)+
+               " Q"+d.offsetX/2+","+d.offsetY/2+" 200,"+3*d.angle/4; } 
+    )
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

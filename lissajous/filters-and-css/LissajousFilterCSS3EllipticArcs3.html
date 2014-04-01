@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Lissajous Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+  <link href="CSS32Background4.css" rel="stylesheet" type="text/css">
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 400,
+        basePointY   = 300,
+        offsetX      = 0,
+        offsetY      = 0,
+        A            = 200,
+        B            = 2,
+        C            = 100,
+        D            = 5,
+        minorAxis    = 80,
+        majorAxis    = 150,
+        Constant     = 200,
+        maxAngle     = 300;
+ 
+    var w = 800, h = 500, p = 10,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              offsetX: A*Math.sin(B*a*Math.PI/180),
+              offsetY: C*Math.cos(D*a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+  vis.selectAll("text")
+    .data(data)
+        .enter().append("svg:path")
+        .style("fill", "red")
+        .attr("fill", function(d) { 
+           if(d.angle % 2 == 0) {
+             return "#ff0";
+           } else {
+             return "#f00";
+           }
+        })
+        .style("stroke-width", "2px")
+        .attr("stroke", "blue")
+        .attr("d", function(d) { 
+           if(d.angle % 2 == 0) {
+           //return "m"+(basePointX+d.offsetX)+","+(basePointX+d.offsetY)+
+           //       " h-150 a150,150 0 1,0 150,-150 z";
+             return "m"+(basePointX+d.radius*d.offsetX)+","+(basePointY+d.offsetY)+
+                    " h-100 a100,100 0 1,0 100,-100 z";
+           } else {
+           //return "m"+(basePointX+d.offsetX/2)+","+(basePointX+d.offsetY/2)+
+           //       " v-150 a150,150 0 0,0 -150,150 z";
+           //return "m"+(basePointX+d.offsetX/2)+","+(basePointX+d.offsetY/2)+
+           //       " v-100 a100,100 0 0,0 -100,100 z";
+             return "m"+(basePointX+2*d.offsetX)+","+(basePointY+2*d.offsetY)+
+                    " v-100 a100,100 0 0,0 -100,100 z";
+           }
+        })
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

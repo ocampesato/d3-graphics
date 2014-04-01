@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cissoid Ellipses</title>
+  <link href="CSS32Background17.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 250,
+        basePointY   = 250,
+        offsetX      = 0,
+        offsetY      = 0,
+        radius       = 0,
+        factor       = 1,
+        minorAxis    = 120,
+        majorAxis    = 80,
+        Constant     = 200,
+        maxAngle     = 720,
+        stripCount   = 20,
+        stripWidth   = Math.floor(maxAngle/stripCount),
+        currStrip    = 0,
+        rVal         = 0,
+        gVal         = 0,
+        bVal         = 0;
+ 
+    var w = 600, h = 500, p = 30,
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              sine:    Math.sin(factor*a*Math.PI/180),
+              cosine:  Math.cos(factor*a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:ellipse")
+    .attr("fill", function(d) { 
+                   rVal = 0; gVal = 0; bVal = 0;
+
+                   currStrip = Math.floor(d.angle/stripWidth);
+                   if(currStrip % 3 == 0) {
+                     rVal = Math.floor((d.angle%stripWidth)*255/stripWidth);
+                   } else if(currStrip % 3 == 1) {
+                     gVal = Math.floor((d.angle%stripWidth)*255/stripWidth);
+                   } else {
+                     bVal = Math.floor((d.angle%stripWidth)*255/stripWidth);
+                   }
+                   return "rgb("+rVal+","+gVal+","+bVal+")"; })
+    .attr("cx",   function(d) { 
+                     radius  = Constant*d.sine*d.sine/d.cosine;
+                     offsetX = radius*Math.cos(d.angle*Math.PI/180);
+                     return basePointX+offsetX;
+    })
+    .attr("cy",   function(d) { 
+                     radius  = Constant*d.sine*d.sine/d.cosine;
+                     offsetY = radius*Math.sin(d.angle*Math.PI/180);
+                     return basePointY+offsetY; 
+    })
+    .attr("rx",   function(d) { return d.angle % majorAxis; })
+    .attr("ry",   function(d) { return d.angle % minorAxis; });
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

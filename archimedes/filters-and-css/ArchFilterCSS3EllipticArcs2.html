@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Archimedean Elliptic Arcs</title>
+  <script type="text/javascript" src="d3.js"></script>
+  <link href="CSS32Background7.css" rel="stylesheet" type="text/css">
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 300,
+        basePointY   = 250,
+        offsetX      = 0,
+        offsetY      = 0,
+        minorAxis    = 180,
+        majorAxis    = 90,
+        Constant     = 0.20,
+        maxAngle     = 360;
+ 
+    var w = 800, h = 500, p = 10,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant*a, 
+              offsetX: Constant*a*Math.cos(a*Math.PI/180),
+              offsetY: Constant*a*Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+  vis.selectAll("text")
+    .data(data)
+        .enter().append("svg:path")
+        .style("fill", "red")
+        .attr("fill", function(d) { 
+           if(d.angle % 2 == 0) {
+             return "#ff0";
+           } else {
+             return "#f00";
+           }
+        })
+        .style("stroke-width", "2px")
+        .attr("stroke", "blue")
+        .attr("d", function(d) { 
+           if(d.angle % 2 == 0) {
+             return "m"+(basePointX+d.offsetX)+","+(basePointY+d.offsetY)+
+                    " h-100 a100,100 0 1,0 100,-100 z";
+           } else {
+             return "m"+(basePointX+d.offsetX/2)+","+(basePointY+d.offsetY/2)+
+                    " v-100 a100,100 0 0,0 -100,100 z";
+           }
+        })
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

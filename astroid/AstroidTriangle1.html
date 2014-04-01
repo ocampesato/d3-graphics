@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Astroid Triangles</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 200,
+        basePointY   = 180,
+        offsetX      = 0,
+        offsetY      = 0,
+        tWidth       = 200,
+        tHeight      = 80,
+        Radius       = 200,
+        cosineAngle  = 0,
+        sineAngle    = 0,
+        petalCount   = 1,
+        maxAngle     = 360;
+ 
+    var w = 600, h = 400, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle: a, 
+              ca:    Math.cos(a*Math.PI/180),
+              sa:    Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    vis.selectAll("text")
+      .data(data)
+      .enter().append("svg:polygon")
+      .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("points",function(d) { 
+                      offsetX = Radius*d.ca*d.ca*d.ca;
+                      offsetY = Radius*d.sa*d.sa*d.sa;
+
+                      var points = (basePointX+offsetX)+","+
+                                   (basePointY+offsetY)+" "+
+                                   (basePointX+offsetX+tWidth)+","+
+                                   (basePointY+offsetY+tHeight)+" "+
+                                   (basePointX+offsetX)+","+
+                                   (basePointY+offsetY+tHeight);
+                      return points;
+      });
+  </script>
+ </body>
+</html>
+ 

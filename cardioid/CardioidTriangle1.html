@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cardioid Triangles</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 100,
+        basePointY   = 200,
+        tWidth       = 200,
+        tHeight      = 80,
+        Radius       = 150,
+        petalCount   = 1,
+        maxAngle     = 360; 
+ 
+    var w = 800, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              r:      Radius*(1.0+Math.cos(petalCount*a*Math.PI/180)),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    vis.selectAll("text")
+      .data(data)
+      .enter().append("svg:polygon")
+      .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("points",function(d) { 
+                      var points = (basePointX+d.r*d.x)+","+
+                                   (basePointY+d.r*d.y)+" "+
+                                   (basePointX+d.r*d.x+tWidth)+","+
+                                   (basePointY+d.r*d.y+tHeight)+" "+
+                                   (basePointX+d.r*d.x)+","+
+                                   (basePointY+d.r*d.y+tHeight);
+                      return points;
+      });
+  </script>
+ </body>
+</html>
+ 

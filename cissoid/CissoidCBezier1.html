@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cissoid Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 100,
+        basePointY   = 350,
+        offsetX      = 0,
+        offsetY      = 0,
+        radius       = 0,
+        factor       = 1,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Constant     = 200,
+        maxAngle     = 720;
+ 
+    var eColors = ['#f00', '#00f'];
+
+    var w = 800, h = 500, p = 30,
+        eColors = ['#fff', '#f00', '#ff0', '#0f0', '#880', 
+                   '#00f', '#0ff', '#000', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              sine:    Math.sin(factor*a*Math.PI/180),
+              cosine:  Math.cos(factor*a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:path")
+      .attr("fill", function(d) { return eColors[d.angle % eColors.length]; })
+      .attr("d", function(d)  { 
+           radius  = Constant*d.sine*d.sine/d.cosine;
+           offsetX = radius*Math.cos(d.angle*Math.PI/180);
+           offsetY = radius*Math.sin(d.angle*Math.PI/180);
+           return "M"+(basePointX+offsetX)+","+(basePointY+offsetY)+
+                  " C"+d.angle/2+","+offsetY/2+" "+
+                  offsetX/3+","+offsetY/4+" 300,100"; }
+    );
+  </script>
+ </body>
+</html>
+

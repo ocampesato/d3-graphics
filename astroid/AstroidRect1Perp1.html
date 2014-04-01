@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Astroid Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 200,
+        basePointY   = 180,
+        offsetX      = 0,
+        offsetY      = 0,
+        rectWidth    = 150,
+        rectHeight   = 100,
+        Radius       = 200,
+        cosineAngle  = 0,
+        sineAngle    = 0,
+        petalCount   = 1,
+        maxAngle     = 360;
+ 
+    var w = 600, h = 450, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle: a, 
+              ca:    Math.cos(a*Math.PI/180),
+              sa:    Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:rect")
+    .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+    .attr("x",     function(d) { 
+                      offsetX = Radius*d.ca*d.ca*d.ca;
+                      return basePointX+offsetX; })
+    .attr("y",     function(d) { 
+                      offsetY = Radius*d.sa*d.sa*d.sa;
+                      return basePointY+offsetY; })
+    .attr("width", function(d) { if(d.angle % 2 == 0) return rectWidth; 
+                                else                 return rectHeight; })
+    .attr("height",function(d) { if(d.angle % 2 == 0) return rectHeight; 
+                                else                 return rectWidth; });
+  </script>
+ </body>
+</html>
+ 

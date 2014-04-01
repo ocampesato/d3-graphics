@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cissoid Rectangles</title>
+  <script type="text/javascript" src="d3.js"></script>
+  <link href="CSS32Background7.css" rel="stylesheet" type="text/css">
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 200,
+        basePointY   = 220,
+        fixedPointX  = 600,
+        fixedPointY  = 50,
+        offsetX      = 0,
+        offsetY      = 0,
+        rectWidth    = 250,
+        rectHeight   = 150,
+        radius       = 0,
+        factor       = 1,
+        Constant     = 200,
+        maxAngle     = 200; // 720;
+ 
+    var w = 800, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              sine:    Math.sin(factor*a*Math.PI/180),
+              cosine:  Math.cos(factor*a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:line")
+    .attr("stroke", function(d) { return eColors[2*d.angle % eColors.length]; })
+    .attr("x1",   function(d) { 
+                      radius  = Constant*d.sine*d.sine/d.cosine;
+                      offsetX = radius*Math.cos(d.angle*Math.PI/180);
+                      return basePointX+offsetX;
+    })
+    .attr("y1",   function(d) { 
+                     radius  = Constant*d.sine*d.sine/d.cosine;
+                     offsetY = radius*Math.sin(d.angle*Math.PI/180);
+                     return basePointY+offsetY; 
+    })
+    .attr("x2",   function(d) { return fixedPointX; })
+    .attr("y2",   function(d) { return fixedPointY; });
+    
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:rect")
+    .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+    .attr("x",   function(d) { 
+                      radius  = Constant*d.sine*d.sine/d.cosine;
+                      offsetX = radius*Math.cos(d.angle*Math.PI/180);
+                      return basePointX+offsetX;
+    })
+    .attr("y",   function(d) { 
+                     radius  = Constant*d.sine*d.sine/d.cosine;
+                     offsetY = radius*Math.sin(d.angle*Math.PI/180);
+                     return basePointY+offsetY; 
+    })
+    .attr("width", function(d) { return d.angle % rectWidth; })
+    .attr("height",function(d) { return d.angle % rectHeight; })
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+    <canvas id="myCanvas" width="800" height="500">
+         Your browser does not support Canvas
+    </canvas>
+ </body>
+</html>
+ 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Cochleoid Rectangles</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 150,
+        basePointY   = 100,
+        offsetX      = 0,
+        offsetY      = 0,
+        rectWidth    = 150,
+        rectHeight   = 100,
+        Constant     = 20000,
+        maxAngle     = 720,
+        stripCount   = 20,
+        stripWidth   = Math.floor(maxAngle/stripCount),
+        rVal         = 0,
+        gVal         = 0,
+        bVal         = 0;
+ 
+    var w = 600, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius:  Constant*Math.sin(a*Math.PI/180)/(a+1),
+              offsetX: Math.cos(a*Math.PI/180),
+              offsetY: Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+    var filter = vis.append("svg:defs")
+                    .append("svg:filter")
+                      .attr("id", "blurFilter1")
+                    .append("svg:feGaussianBlur")
+                      .attr("stdDeviation", 4);
+
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:rect")
+    .attr("fill", function(d) { 
+                   rVal = Math.floor((d.angle%stripWidth)*255/stripWidth);
+                   return "rgb("+rVal+","+gVal+","+bVal+")"; })
+    .attr("x",     function(d) { return basePointX+d.radius*d.offsetX; })
+    .attr("y",     function(d) { return basePointY+d.radius*d.offsetY; })
+    .attr("width", function(d) { return rectWidth; })
+    .attr("height",function(d) { return rectHeight; })
+    .attr("filter", "url(#blurFilter1)");
+  </script>
+ </body>
+</html>
+ 

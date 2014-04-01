@@ -1,0 +1,34 @@
+
+#myCanvas {
+opacity: 0.5;
+font-size: 24px;
+width:  800px;
+height: 500px;
+position: absolute; top: 0px; left: 0px;
+
+background: -webkit-gradient(
+  radial, 300 40%, 161, 301 25%, 260, from(red), 
+  color-stop(0.05, orange), color-stop(0.4, yellow), 
+  color-stop(0.6, green), color-stop(0.8, blue),
+  to(#fff)
+ );
+
+-webkit-transform : scale(0.9) skew(-10deg, 20deg);
+-transform : scale(0.9) skew(-10deg, 20deg);
+}
+
+#myCanvas:hover {
+font-size: 24px;
+width:  800px;
+height: 500px;
+position: absolute; top: 0px; left: 0px;
+
+background: -webkit-gradient(
+  radial, 500 40%, 0, 301 25%, 360, from(red), 
+  color-stop(0.05, orange), color-stop(0.4, yellow), 
+  color-stop(0.6, green), color-stop(0.8, blue),
+  to(#fff)
+ );
+-webkit-box-shadow:  0px 0px 8px #000;
+}
+

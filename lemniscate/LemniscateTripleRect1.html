@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Lemniscate Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 200,
+        basePointY   = 220,
+        offsetX      = 0,
+        offsetY      = 0,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Radius       = 150,
+        petalCount   = 3,
+        maxAngle     = 360;
+ 
+    var w = 600, h = 400, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:   a, 
+              radius: Radius*Math.sqrt(Math.abs(Math.cos(petalCount*a*Math.PI/180))),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:ellipse")
+    .attr("fill", function(d) { 
+                      return eColors[d.angle % eColors.length]; })
+    .attr("cx",   function(d) { 
+                      offsetX = d.radius*d.x;
+
+                      if(d.angle % 3 == 0) {
+                         return basePointX+offsetX+majorAxis/16; 
+                      } else if(d.angle % 3 == 1) {
+                         return basePointX+offsetX-majorAxis/16; 
+                      } else {
+                         return basePointX+offsetX;
+                      }
+                  })
+    .attr("cy",   function(d) { 
+                      offsetY = d.radius*d.y;
+
+                      if(d.angle % 3 == 2) {
+                         return basePointY+offsetY-minorAxis/16; 
+                      } else {
+                         return basePointY+offsetY;
+                      }
+                  })
+    .attr("rx",   function(d) { return majorAxis; })
+    .attr("ry",   function(d) { return minorAxis; });
+  </script>
+ </body>
+</html>
+ 

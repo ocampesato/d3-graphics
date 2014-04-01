@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Lemniscate Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 180,
+        basePointY   = 150,
+        offsetX      = 0,
+        offsetY      = 0,
+        rectWidth    = 250,
+        rectHeight   = 150,
+        Radius       = 150,
+        petalCount   = 1,
+        maxAngle     = 360,
+        rVal         = 0,
+        gVal         = 0,
+        bVal         = 0;
+ 
+    var w = 600,
+        h = 400,
+        p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+     
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              radius: Radius*Math.sqrt(Math.abs(Math.cos(2*a*Math.PI/180))),
+              x:      Math.cos(a*Math.PI/180),
+              y:      Math.sin(a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:rect")
+    .attr("fill",  function(d) { return eColors[d.angle % eColors.length]; })
+    .attr("x",     function(d) { 
+                      offsetX = d.radius*d.x;
+                      return basePointX+offsetX; })
+    .attr("y",     function(d) { 
+                      offsetY = d.radius*d.y;
+                      return basePointY+offsetY; })
+    .attr("width", function(d) { return d.angle % rectWidth; })
+    .attr("height",function(d) { return d.angle % rectHeight; });
+  </script>
+ </body>
+</html>
+ 

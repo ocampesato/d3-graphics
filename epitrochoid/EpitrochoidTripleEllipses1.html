@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Epitrochoid Ellipses</title>
+  <script type="text/javascript" src="d3.js"></script>
+ </head>
+
+ <body>
+  <script type="text/javascript">
+    var basePointX   = 350,
+        basePointY   = 220,
+        offsetX      = 0,
+        offsetY      = 0,
+        minorAxis    = 80,
+        majorAxis    = 50,
+        Radius       = 150,
+        A            = 80,
+        B            = 50,
+        C            = 30,
+        petalCount   = 9,
+        maxAngle     = 360;
+ 
+    var w = 800, h = 500, p = 30,
+        eColors = ['#f00', '#0f0', '#00f'],
+        x = d3.scale.linear().domain([0, 1]).range([0, w]),
+        y = d3.scale.linear().domain([0, 1]).range([h, 0]);
+    
+    var data = d3.range(maxAngle).map(function(a) {
+      return {angle:  a, 
+              radius: 1,
+              ct:     Math.cos(petalCount*a*Math.PI/180),
+              st:     Math.sin(petalCount*a*Math.PI/180),
+              cabt:   Math.cos(petalCount*(A/B+1)*a*Math.PI/180),
+              sabt:   Math.sin(petalCount*(A/B+1)*a*Math.PI/180)}
+    });
+
+    var vis = d3.select("body")
+      .append("svg:svg")
+      .data([data])
+      .attr("width",  w + p * 2)
+      .attr("height", h + p * 2)
+      .append("svg:g")
+      .attr("transform", "translate(" + p + "," + p + ")");
+    
+  vis.selectAll("text")
+    .data(data)
+    .enter().append("svg:ellipse")
+    .attr("fill", function(d) { 
+                      return eColors[d.angle % eColors.length]; })
+    .attr("cx",   function(d) { 
+                      offsetX = (A+B)*d.ct - (C)*d.cabt;
+
+                      if(d.angle % 3 == 0) {
+                         return basePointX+offsetX+majorAxis/16; 
+                      } else if(d.angle % 3 == 1) {
+                         return basePointX+offsetX-majorAxis/16; 
+                      } else {
+                         return basePointX+offsetX;
+                      }
+                  })
+    .attr("cy",   function(d) { 
+                      offsetY = (A+B)*d.st - (C)*d.sabt;
+
+                      if(d.angle % 3 == 2) {
+                         return basePointY+offsetY-minorAxis/16; 
+                      } else {
+                         return basePointY+offsetY;
+                      }
+                  })
+    .attr("rx",   function(d) { return majorAxis; })
+    .attr("ry",   function(d) { return minorAxis; });
+  </script>
+ </body>
+</html>
+ 
