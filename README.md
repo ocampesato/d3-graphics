@@ -16,3 +16,8 @@ https://github.com/ocampesato/web-animations-gestures
 https://github.com/ocampesato/web-animations-transforms
 ```
 Some of my other repositories use AngularJS, Famo.us, and ReactJS to create SVG-based graphics.
+
+A link to my upcoming D3 book (probably around mid-2015):
+```
+http://www.amazon.com/D3-Driven-Documents-Pocket-Primer/dp/1938549651
+```
